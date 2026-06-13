@@ -1,0 +1,483 @@
+/* arena-frontend/src/App.css */
+
+/* ---------------------------------------------------
+   1. FONTS & CSS VARIABLES (THEME DESIGN SYSTEM)
+   --------------------------------------------------- */
+   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+   :root {
+     /* Premium Dark Theme Palette */
+     --bg-app: #09090b;           /* Deep zinc background */
+     --bg-nav: #09090b;
+     --bg-panel: #18181b;         /* Slightly lighter zinc for panels */
+     --bg-card: rgba(24, 24, 27, 0.6);
+     --bg-card-hover: rgba(39, 39, 42, 0.8);
+     
+     /* Borders */
+     --border-light: rgba(255, 255, 255, 0.08);
+     --border-focus: rgba(255, 255, 255, 0.2);
+     
+     /* Typography */
+     --text-main: #f4f4f5;
+     --text-muted: #a1a1aa;
+     
+     /* Accents */
+     --brand: #3b82f6;            /* Professional Blue */
+     --brand-hover: #2563eb;
+     --brand-glow: rgba(59, 130, 246, 0.2);
+     --green: #10b981;            /* Success Green */
+     --red: #ef4444;              /* Error Red */
+     --yellow: #f59e0b;           /* Warning/XP Yellow */
+     
+     /* Layout constraints */
+     --nav-height: 64px;
+   }
+   
+   /* ---------------------------------------------------
+      2. GLOBAL RESETS & BASE TYPOGRAPHY
+      --------------------------------------------------- */
+   body {
+     margin: 0;
+     padding: 0;
+     background-color: var(--bg-app);
+     color: var(--text-main);
+     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+   }
+   
+   * {
+     box-sizing: border-box;
+   }
+   
+   /* Custom Premium Scrollbar */
+   ::-webkit-scrollbar { width: 8px; height: 8px; }
+   ::-webkit-scrollbar-track { background: transparent; }
+   ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+   ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+   
+   /* Layout Wrappers */
+   .layout-base { 
+     min-height: 100vh; 
+     display: flex; 
+     flex-direction: column; 
+   }
+   
+   .no-scroll { 
+     height: 100vh; 
+     overflow: hidden; 
+   }
+   
+   .scroll-y { 
+     overflow-y: auto; 
+   }
+   
+   /* ---------------------------------------------------
+      3. UTILITY CLASSES (SPACING, TEXT, BORDERS)
+      --------------------------------------------------- */
+   .text-muted { color: var(--text-muted); }
+   .text-green { color: var(--green); font-weight: 600; }
+   .text-red { color: var(--red); font-weight: 600; }
+   .font-mono { font-family: 'JetBrains Mono', monospace; }
+   .font-medium { font-weight: 500; }
+   .font-bold { font-weight: 700; }
+   .text-2xl { font-size: 24px; letter-spacing: -0.02em; }
+   .text-lg { font-size: 18px; letter-spacing: -0.01em; }
+   
+   .mt-2 { margin-top: 8px; }
+   .mt-4 { margin-top: 16px; } 
+   .mt-8 { margin-top: 32px; } 
+   .mb-4 { margin-bottom: 16px; }
+   
+   .p-6 { padding: 24px; }
+   .pt-2 { padding-top: 8px; }
+   .border-b { border-bottom: 1px solid var(--border-light); }
+   .border-t { border-top: 1px solid var(--border-light); }
+   
+   .flex-grow { flex-grow: 1; }
+   .full-width { width: 100%; }
+   
+   /* Animations */
+   @keyframes fadeIn {
+     from { opacity: 0; transform: translateY(10px); }
+     to { opacity: 1; transform: translateY(0); }
+   }
+   .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+   
+   /* ---------------------------------------------------
+      4. NAVIGATION BAR
+      --------------------------------------------------- */
+   .navbar {
+     height: var(--nav-height);
+     background: var(--bg-nav);
+     border-bottom: 1px solid var(--border-light);
+     display: flex; 
+     justify-content: space-between; 
+     align-items: center;
+     padding: 0 32px; 
+     flex-shrink: 0;
+     z-index: 100;
+   }
+   
+   .brand { 
+     display: flex; 
+     align-items: center; 
+     gap: 12px; 
+     font-weight: 600; 
+     font-size: 16px; 
+     letter-spacing: -0.02em; 
+   }
+   
+   .logo-box { 
+     background: var(--text-main); 
+     color: var(--bg-app); 
+     padding: 4px 8px; 
+     border-radius: 6px; 
+     font-family: 'JetBrains Mono', monospace; 
+     font-weight: 700; 
+   }
+   
+   .user-controls { 
+     display: flex; 
+     align-items: center; 
+     gap: 20px; 
+   }
+   
+   .xp-chip { 
+     background: rgba(245, 158, 11, 0.1); 
+     color: var(--yellow); 
+     border: 1px solid rgba(245, 158, 11, 0.2); 
+     padding: 6px 14px; 
+     border-radius: 20px; 
+     font-family: 'JetBrains Mono', monospace;
+     font-weight: 600; 
+     font-size: 13px; 
+   }
+   
+   .profile-chip { 
+     display: flex; 
+     align-items: center; 
+     gap: 16px; 
+     font-size: 14px; 
+     font-weight: 500; 
+     color: var(--text-muted);
+   }
+   
+   /* ---------------------------------------------------
+      5. BUTTONS, INPUTS & FORMS
+      --------------------------------------------------- */
+   .btn-primary {
+     background: var(--brand); 
+     color: white; 
+     border: none; 
+     padding: 12px 24px;
+     border-radius: 8px; 
+     font-size: 14px; 
+     font-weight: 600; 
+     cursor: pointer; 
+     transition: all 0.2s ease;
+     box-shadow: 0 4px 12px var(--brand-glow);
+   }
+   
+   .btn-primary:hover:not(:disabled) { 
+     background: var(--brand-hover); 
+     transform: translateY(-1px); 
+     box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+   }
+   
+   .btn-primary:disabled { 
+     background: var(--bg-panel);
+     color: var(--text-muted);
+     border: 1px solid var(--border-light);
+     cursor: not-allowed; 
+     box-shadow: none; 
+   }
+   
+   .text-btn { 
+     background: none; 
+     border: none; 
+     color: var(--text-muted); 
+     cursor: pointer; 
+     font-size: 14px; 
+     padding: 0; 
+     transition: color 0.2s; 
+     font-weight: 500;
+   }
+   .text-btn:hover { color: var(--text-main); }
+   
+   .input-field {
+     width: 100%; 
+     padding: 14px 16px; 
+     margin-bottom: 16px; 
+     background: rgba(0,0,0,0.5);
+     border: 1px solid var(--border-light); 
+     color: white; 
+     border-radius: 8px; 
+     font-family: 'Inter', sans-serif; 
+     font-size: 14px; 
+     transition: all 0.2s;
+   }
+   
+   .input-field:focus { 
+     outline: none; 
+     border-color: var(--brand); 
+     box-shadow: 0 0 0 2px var(--brand-glow); 
+   }
+   
+   /* ---------------------------------------------------
+      6. CARDS, GRIDS & BADGES
+      --------------------------------------------------- */
+   .container-max { 
+     max-width: 1100px; 
+     margin: 0 auto; 
+     padding: 60px 24px; 
+     width: 100%; 
+   }
+   
+   .header-title { 
+     font-size: 32px; 
+     font-weight: 700; 
+     letter-spacing: -0.03em; 
+     margin: 0 0 40px 0; 
+   }
+   
+   .glass-card {
+     background: var(--bg-card); 
+     backdrop-filter: blur(12px); 
+     -webkit-backdrop-filter: blur(12px);
+     border: 1px solid var(--border-light); 
+     border-radius: 12px;
+   }
+   
+   .hoverable { 
+     padding: 32px; 
+     cursor: pointer; 
+     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+   }
+   
+   .hoverable:hover { 
+     background: var(--bg-card-hover); 
+     border-color: var(--border-focus); 
+     transform: translateY(-4px); 
+     box-shadow: 0 12px 24px rgba(0,0,0,0.4); 
+   }
+   
+   .hoverable h3 { margin: 16px 0 8px 0; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+   .hoverable p { margin: 0; color: var(--text-muted); line-height: 1.6; }
+   
+   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+   .grid-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+   
+   .list-item { 
+     padding: 20px 24px; 
+     cursor: pointer; 
+     display: flex; 
+     justify-content: space-between; 
+     align-items: center; 
+     transition: all 0.2s; 
+   }
+   
+   .list-item:hover { 
+     background: var(--bg-card-hover); 
+     border-color: var(--text-muted); 
+   }
+   
+   .solved-card { 
+     border-color: rgba(16, 185, 129, 0.3); 
+     background: rgba(16, 185, 129, 0.05); 
+   }
+   
+   .badge { 
+     display: inline-block; 
+     padding: 4px 10px; 
+     border-radius: 6px; 
+     font-size: 12px; 
+     font-weight: 600; 
+     text-transform: uppercase; 
+     letter-spacing: 0.05em; 
+   }
+   
+   .bg-brand { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+   .bg-green { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+   .bg-yellow { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+   .bg-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+   
+   /* ---------------------------------------------------
+      7. ARENA WORKSPACE (THE IDE LAYOUT)
+      --------------------------------------------------- */
+   .arena-split { 
+     display: flex; 
+     height: calc(100vh - var(--nav-height)); 
+     width: 100%; 
+   }
+   
+   /* Left Panel (Description & Test Cases) */
+   .arena-left { 
+     width: 40%; 
+     min-width: 400px; 
+     display: flex; 
+     flex-direction: column; 
+     background: var(--bg-app); 
+     border-right: 1px solid var(--border-light); 
+   }
+   
+   .prose p { 
+     margin-top: 0;
+     margin-bottom: 1.2em; 
+     line-height: 1.7; 
+     font-size: 15px;
+   }
+   
+   .test-case-grid { 
+     display: flex; 
+     flex-direction: column; 
+     gap: 16px; 
+     padding-bottom: 40px;
+   }
+   
+   .test-card { 
+     background: var(--bg-panel); 
+     border: 1px solid var(--border-light); 
+     border-radius: 8px; 
+     overflow: hidden; 
+   }
+   
+   .test-header { 
+     background: rgba(255,255,255,0.03); 
+     padding: 10px 16px; 
+     font-size: 12px; 
+     font-weight: 600; 
+     color: var(--text-muted); 
+     border-bottom: 1px solid var(--border-light); 
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+   }
+   
+   .test-body { 
+     padding: 16px; 
+     display: flex; 
+     flex-direction: column; 
+     gap: 10px; 
+     font-size: 14px; 
+   }
+   
+   /* Right Panel (Editor & Console) */
+   .arena-right { 
+     flex-grow: 1; 
+     display: flex; 
+     flex-direction: column; 
+     background: #1e1e1e; /* Standard VS Code Dark Background */
+   }
+   
+   .editor-header { 
+     display: flex; 
+     justify-content: space-between; 
+     align-items: center; 
+     padding: 12px 24px; 
+     background: var(--bg-panel); 
+     border-bottom: 1px solid #333; 
+   }
+   
+   .select-dark { 
+     background: rgba(0,0,0,0.5); 
+     color: white; 
+     border: 1px solid var(--border-light); 
+     padding: 8px 16px; 
+     border-radius: 6px; 
+     font-family: 'Inter', sans-serif; 
+     font-size: 14px; 
+     cursor: pointer; 
+     outline: none; 
+   }
+   
+   .select-dark:focus { border-color: var(--brand); }
+   
+   .editor-body { 
+     height: 60%; 
+     position: relative; 
+     flex-shrink: 0;
+   }
+   
+   /* Console System Output */
+   .console-panel { 
+     flex-grow: 1; 
+     display: flex; 
+     flex-direction: column; 
+     background: #000; 
+     border-top: 1px solid #333; 
+     overflow: hidden;
+   }
+   
+   .console-header { 
+     padding: 10px 24px; 
+     font-size: 12px; 
+     font-weight: 600; 
+     color: var(--text-muted); 
+     background: var(--bg-panel); 
+     border-bottom: 1px solid #333; 
+     text-transform: uppercase; 
+     letter-spacing: 0.05em; 
+     display: flex;
+     align-items: center;
+   }
+   
+   .console-output { 
+     margin: 0; 
+     padding: 16px 24px; 
+     font-family: 'JetBrains Mono', monospace; 
+     font-size: 14px; 
+     line-height: 1.6; 
+     overflow-y: auto; 
+     white-space: pre-wrap; 
+     height: 100%;
+   }
+   
+   /* ---------------------------------------------------
+      8. AUTHENTICATION MODULE
+      --------------------------------------------------- */
+   .auth-center { 
+     flex-grow: 1; 
+     display: flex; 
+     align-items: center; 
+     justify-content: center; 
+     padding: 24px;
+   }
+   
+   .auth-box { 
+     padding: 48px; 
+     width: 100%;
+     max-width: 420px; 
+     box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+   }
+   
+   .auth-box h2 { 
+     text-align: center; 
+     margin: 0 0 32px 0; 
+     font-size: 24px; 
+     letter-spacing: -0.02em; 
+     font-weight: 700;
+   }
+   
+   .auth-footer { 
+     margin-top: 24px; 
+     text-align: center; 
+     font-size: 14px; 
+     color: var(--text-muted); 
+     cursor: pointer; 
+     transition: color 0.2s; 
+     font-weight: 500;
+   }
+   
+   .auth-footer:hover { color: var(--text-main); }
+   
+   .alert-error { 
+     background: rgba(239, 68, 68, 0.1); 
+     color: var(--red); 
+     border: 1px solid rgba(239, 68, 68, 0.2); 
+     padding: 12px 16px; 
+     border-radius: 8px; 
+     margin-bottom: 24px; 
+     text-align: center; 
+     font-size: 14px; 
+     font-weight: 500;
+   }
