@@ -88,7 +88,11 @@ function App() {
     setLoading(true); 
     setOutput('Initiating secure container... Compiling and executing matrix...');
     try {
-      const res = await axios.post(`${API_URL}/execute`, { code, language, test_logic: activeChallenge.test_logic[language] });
+      const res = await axios.post(`${API_URL}/execute`, { 
+        code, 
+        language, 
+        test_logic: activeChallenge.test_logic[language] 
+      });
       
       setOutput(res.data.result);
       
@@ -97,6 +101,20 @@ function App() {
         setShowConfetti(true); 
         setTotalXP(prev => prev + activeChallenge.xp_reward); 
         setSolvedQuestions([...solvedQuestions, activeChallenge.id]);
+        
+        // NEW: Send the updated progress to the backend database
+        if (currentUser) {
+          try {
+            await axios.post(`${API_URL}/api/progress`, {
+              username: currentUser,
+              question_id: activeChallenge.id,
+              xp_reward: activeChallenge.xp_reward
+            });
+          } catch (progressErr) {
+            console.error("Failed to sync progress to database", progressErr);
+          }
+        }
+
         setTimeout(() => setShowConfetti(false), 5000); 
       }
     } catch (err) { 

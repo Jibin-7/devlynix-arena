@@ -3,7 +3,7 @@ from pymongo import MongoClient
 import random
 
 # Connect to Database
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb+srv://jibinsjv:hello123@cluster.pmjk4nz.mongodb.net/?appName=Cluster')
 db = client['buildathon_db']
 challenges = db['challenges']
 

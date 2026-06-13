@@ -66,6 +66,34 @@ def login():
         # IMPORTANT: This will print the exact error to your Render Logs
         print(f"DEBUG_ERROR: {str(e)}") 
         return jsonify({"error": f"Internal Server Error: {str(e)}"}), 500
+    
+# ---------------------------------------------------------
+# NEW: USER PROGRESS ROUTE
+# ---------------------------------------------------------
+@app.route('/api/progress', methods=['POST'])
+def save_progress():
+    data = request.json
+    username = data.get('username')
+    question_id = data.get('question_id')
+    xp_reward = data.get('xp_reward', 0)
+
+    if not username or question_id is None:
+        return jsonify({"error": "Missing username or question_id"}), 400
+
+    try:
+        # $addToSet prevents duplicate IDs in the array
+        # $inc safely adds to the existing XP total
+        users_collection.update_one(
+            {"username": username},
+            {
+                "$inc": {"xp": xp_reward},
+                "$addToSet": {"solved_questions": question_id}
+            }
+        )
+        return jsonify({"message": "Progress saved successfully"}), 200
+    except Exception as e:
+        print(f"DEBUG_ERROR: {str(e)}")
+        return jsonify({"error": "Failed to save progress"}), 500
 # ---------------------------------------------------------
 # 3. ARENA DATA ROUTES
 # ---------------------------------------------------------
