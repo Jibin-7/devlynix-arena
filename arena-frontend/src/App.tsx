@@ -123,6 +123,8 @@ function App() {
 
   // --- GAMIFICATION ---
   const [showConfetti, setShowConfetti] = useState(false);
+  const [showVictoryModal, setShowVictoryModal] = useState(false);
+  const [victoryDetails, setVictoryDetails] = useState({ xpGained: 0, oldRank: '', newRank: '', unlockedBadges: [] as string[] });
 
   // --- NAVIGATION ---
   const [view, setView] = useState<View>('auth');
@@ -258,6 +260,9 @@ function App() {
   // ---------------------------------------------------------
   // CODE EXECUTION
   // ---------------------------------------------------------
+  // ---------------------------------------------------------
+  // CODE EXECUTION
+  // ---------------------------------------------------------
   const runCode = async () => {
     if (!activeChallenge) return;
     setExecuting(true);
@@ -276,12 +281,29 @@ function App() {
         setShowConfetti(true);
         setTimeout(() => setShowConfetti(false), 5500);
 
+        // 🎮 GAMIFICATION ENGINE LAYER 🎮
+        const oldRankInfo = getRankInfo(currentUser.xp);
+        const oldBadges = ACHIEVEMENTS.filter(a => a.check(currentUser)).map(a => a.label);
+
         const updated: User = {
           ...currentUser,
           xp: currentUser.xp + activeChallenge.xp_reward,
           solved_questions: [...currentUser.solved_questions, activeChallenge.id],
         };
         setCurrentUser(updated);
+
+        const newRankInfo = getRankInfo(updated.xp);
+        const newBadges = ACHIEVEMENTS.filter(a => a.check(updated)).map(a => a.label);
+        const uniqueNewBadges = newBadges.filter(b => !oldBadges.includes(b));
+
+        // Setup details for our shiny new Victory Overlay
+        setVictoryDetails({
+          xpGained: activeChallenge.xp_reward,
+          oldRank: oldRankInfo.label,
+          newRank: newRankInfo.label,
+          unlockedBadges: uniqueNewBadges
+        });
+        setShowVictoryModal(true);
 
         try {
           await axios.post(`${API_URL}/api/progress`, {
@@ -797,6 +819,78 @@ function App() {
     <div className="layout-base no-scroll" data-theme={theme}>
       {showConfetti && <Confetti recycle={false} numberOfPieces={320} />}
       <Navbar />
+
+      {/* 🔮 NEW ENHANCED GAMIFICATION OVERLAY 🔮 */}
+      {showVictoryModal && (
+        <div className="victory-modal-overlay" style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.85)', display: 'flex',
+          justifyContent: 'center', alignItems: 'center', zIndex: 9999,
+          backdropFilter: 'blur(8px)'
+        }}>
+          <div className="glass-card victory-box text-center fade-in" style={{
+            maxWidth: '500px', width: '90%', padding: '40px',
+            borderRadius: '16px', border: '1px solid var(--accent-color, #00ffcc)',
+            boxShadow: '0 0 30px rgba(0,255,204,0.3)', textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '64px', marginBottom: '16px' }}>🏆</div>
+            <h1 style={{ color: '#00ffcc', margin: '0 0 8px 0', fontSize: '2rem', letterSpacing: '1px' }}>CHALLENGE CLEARED!</h1>
+            <p className="text-muted" style={{ margin: '0 0 24px 0' }}>All system verification test cases passed successfully.</p>
+            
+            <div style={{
+              backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '12px',
+              padding: '20px', marginBottom: '24px'
+            }}>
+              <div style={{ fontSize: '14px', textTransform: 'uppercase', color: '#aaa', fontWeight: 'bold' }}>Rewards Manifested</div>
+              <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', margin: '10px 0' }}>
+                +{victoryDetails.xpGained} <span style={{ color: '#00ffcc' }}>XP</span>
+              </div>
+              
+              {/* If they level up, blast it on screen */}
+              {victoryDetails.oldRank !== victoryDetails.newRank ? (
+                <div style={{
+                  marginTop: '15px', color: '#ffea00', fontWeight: 'bold',
+                  border: '1px dashed #ffea00', padding: '8px', borderRadius: '6px',
+                  backgroundColor: 'rgba(255,234,0,0.1)', animation: 'pulse 2s infinite'
+                }}>
+                  🚀 RANK ADVANCEMENT: {victoryDetails.oldRank} ➔ {victoryDetails.newRank}!
+                </div>
+              ) : (
+                <div style={{ fontSize: '13px', color: '#888' }}>
+                  Current Status Tier: <strong>{victoryDetails.newRank}</strong>
+                </div>
+              )}
+            </div>
+
+            {/* Display newly unlocked achievement badges inside the modal dynamically */}
+            {victoryDetails.unlockedBadges.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <div style={{ fontSize: '12px', textTransform: 'uppercase', color: '#ff5555', fontWeight: 'bold', marginBottom: '10px' }}>
+                  🎖️ New Badge Unlocked!
+                </div>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                  {victoryDetails.unlockedBadges.map((badge, idx) => (
+                    <span key={idx} style={{
+                      backgroundColor: 'rgba(255,85,85,0.1)', border: '1px solid #ff5555',
+                      padding: '6px 12px', borderRadius: '20px', fontSize: '13px', color: '#fff'
+                    }}>
+                      🔥 {badge}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button 
+              className="btn-primary" 
+              style={{ padding: '12px 32px', fontSize: '16px', width: '100%' }}
+              onClick={() => setShowVictoryModal(false)}
+            >
+              Continue Adventure
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="arena-split">
         {/* LEFT: Problem & test cases */}

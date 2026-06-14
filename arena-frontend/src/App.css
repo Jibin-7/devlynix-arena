@@ -153,6 +153,18 @@ body {
 
 .fade-in { animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.victory-box {
+  background: rgba(20, 20, 25, 0.75) !important;
+  border-color: #00ffcc !important;
+  animation: fade-in 0.3s ease-out;
+}
+
 /* ---------------------------------------------------
    6. SKELETON LOADER
    --------------------------------------------------- */
