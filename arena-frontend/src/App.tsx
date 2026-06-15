@@ -329,7 +329,7 @@ function App() {
     <nav className="navbar" role="navigation" aria-label="Main navigation">
       <div className="brand">
         <div className="logo-box" aria-hidden="true">{'</>'}</div>
-        <span>DevLynix Platform</span>
+        <span>Syntax-Saga Platform</span>
       </div>
 
       {/* Desktop nav links */}
@@ -410,7 +410,7 @@ function App() {
         <div className="auth-center">
           <div className="glass-card auth-box fade-in">
             <div className="auth-logo" aria-hidden="true">{'</>'}</div>
-            <h1 className="auth-title">DevLynix Arena</h1>
+            <h1 className="auth-title">Syntax-Saga Arena</h1>
             <p className="auth-subtitle">
               {isLoginMode ? 'Sign in to your developer profile' : 'Create your developer profile'}
             </p>
